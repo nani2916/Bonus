@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Normalization Assignment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bonus Assignment: Normalization of Bookings Table</h1>
+    <p>Given the following unnormalized data table <strong>Bookings</strong>, perform the normalization process to convert it into 1NF, 2NF, 3NF, and BCNF.</p>
+
+    <h2>Unnormalized Table</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>BookingID</th>
+                <th>CustomerID</th>
+                <th>CustomerName</th>
+                <th>FlightID</th>
+                <th>FlightName</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>SeatNumbers</th>
+                <th>AirlineID</th>
+                <th>AirlineName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F001</td>
+                <td>Flight A</td>
+                <td>2024-10-12</td>
+                <td>300</td>
+                <td>12A, 12B</td>
+                <td>A001</td>
+                <td>SkyHigh</td>
+            </tr>
+            <tr>
+                <td>B002</td>
+                <td>C002</td>
+                <td>Bob White</td>
+                <td>F002</td>
+                <td>Flight B</td>
+                <td>2024-10-13</td>
+                <td>250</td>
+                <td>15C</td>
+                <td>A002</td>
+                <td>AirWings</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F003</td>
+                <td>Flight C</td>
+                <td>2024-11-01</td>
+                <td>400</td>
+                <td>8A, 8B, 8C</td>
+                <td>A003</td>
+                <td>FlyAway</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>1NF (First Normal Form)</h2>
+    <p>To achieve 1NF, we eliminate repeating groups and ensure each attribute contains only atomic values. This means breaking down the <strong>SeatNumbers</strong> column so that each seat is listed separately, resulting in the following structure:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>BookingID</th>
+                <th>CustomerID</th>
+                <th>CustomerName</th>
+                <th>FlightID</th>
+                <th>FlightName</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>SeatNumber</th>
+                <th>AirlineID</th>
+                <th>AirlineName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F001</td>
+                <td>Flight A</td>
+                <td>2024-10-12</td>
+                <td>300</td>
+                <td>12A</td>
+                <td>A001</td>
+                <td>SkyHigh</td>
+            </tr>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F001</td>
+                <td>Flight A</td>
+                <td>2024-10-12</td>
+                <td>300</td>
+                <td>12B</td>
+                <td>A001</td>
+                <td>SkyHigh</td>
+            </tr>
+            <tr>
+                <td>B002</td>
+                <td>C002</td>
+                <td>Bob White</td>
+                <td>F002</td>
+                <td>Flight B</td>
+                <td>2024-10-13</td>
+                <td>250</td>
+                <td>15C</td>
+                <td>A002</td>
+                <td>AirWings</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F003</td>
+                <td>Flight C</td>
+                <td>2024-11-01</td>
+                <td>400</td>
+                <td>8A</td>
+                <td>A003</td>
+                <td>FlyAway</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F003</td>
+                <td>Flight C</td>
+                <td>2024-11-01</td>
+                <td>400</td>
+                <td>8B</td>
+                <td>A003</td>
+                <td>FlyAway</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>Alice Brown</td>
+                <td>F003</td>
+                <td>Flight C</td>
+                <td>2024-11-01</td>
+                <td>400</td>
+                <td>8C</td>
+                <td>A003</td>
+                <td>FlyAway</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2NF (Second Normal Form)</h2>
+    <p>To achieve 2NF, we must eliminate partial dependencies, ensuring that all non-key attributes depend on the entire primary key. We separate the data into multiple tables:</p>
+
+    <h3>Bookings Table</h3>
+    <p>This table now contains only information directly related to each booking:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>BookingID</th>
+                <th>CustomerID</th>
+                <th>FlightID</th>
+                <th>SeatNumber</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>F001</td>
+                <td>12A</td>
+            </tr>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>F001</td>
+                <td>12B</td>
+            </tr>
+            <tr>
+                <td>B002</td>
+                <td>C002</td>
+                <td>F002</td>
+                <td>15C</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>F003</td>
+                <td>8A</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>F003</td>
+                <td>8B</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>F003</td>
+                <td>8C</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Flight Details Table</h3>
+    <p>This table contains flight-related information that was previously duplicated:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>FlightID</th>
+                <th>FlightName</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>AirlineID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>F001</td>
+                <td>Flight A</td>
+                <td>2024-10-12</td>
+                <td>300</td>
+                <td>A001</td>
+            </tr>
+            <tr>
+                <td>F002</td>
+                <td>Flight B</td>
+                <td>2024-10-13</td>
+                <td>250</td>
+                <td>A002</td>
+            </tr>
+            <tr>
+                <td>F003</td>
+                <td>Flight C</td>
+                <td>2024-11-01</td>
+                <td>400</td>
+                <td>A003</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Airline Table</h3>
+    <p>This table contains information about airlines:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>AirlineID</th>
+                <th>AirlineName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A001</td>
+                <td>SkyHigh</td>
+            </tr>
+            <tr>
+                <td>A002</td>
+                <td>AirWings</td>
+            </tr>
+            <tr>
+                <td>A003</td>
+                <td>FlyAway</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Customer Table</h3>
+    <p>This table contains customer details:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>CustomerID</th>
+                <th>CustomerName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>C001</td>
+                <td>Alice Brown</td>
+            </tr>
+            <tr>
+                <td>C002</td>
+                <td>Bob White</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3NF (Third Normal Form)</h2>
+    <p>To achieve 3NF, we ensure that no transitive dependencies exist, meaning non-primary key columns should not depend on other non-primary key columns. The current design already follows this principle, as each table is dependent only on its primary key.</p>
+
+    <h2>BCNF (Boyce-Codd Normal Form)</h2>
+    <p>BCNF is achieved by further refining the 3NF structure to ensure that every determinant is a candidate key. In the current structure, all functional dependencies are satisfied, meaning that there are no overlapping candidate keys.</p>
+
+    <h3>Final Tables after BCNF</h3>
+
+    <h3>Bookings Table</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>BookingID</th>
+                <th>CustomerID</th>
+                <th>FlightID</th>
+                <th>SeatNumber</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>F001</td>
+                <td>12A</td>
+            </tr>
+            <tr>
+                <td>B001</td>
+                <td>C001</td>
+                <td>F001</td>
+                <td>12B</td>
+            </tr>
+            <tr>
+                <td>B002</td>
+                <td>C002</td>
+                <td>F002</td>
+                <td>15C</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>F003</td>
+                <td>8A</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>F003</td>
+                <td>8B</td>
+            </tr>
+            <tr>
+                <td>B003</td>
+                <td>C001</td>
+                <td>F003</td>
+                <td>8C</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Flight Details Table</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>FlightID</th>
+                <th>FlightName</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>AirlineID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>F001</td>
+                <td>Flight A</td>
+                <td>2024-10-12</td>
+                <td>300</td>
+                <td>A001</td>
+            </tr>
+            <tr>
+                <td>F002</td>
+                <td>Flight B</td>
+                <td>2024-10-13</td>
+                <td>250</td>
+                <td>A002</td>
+            </tr>
+            <tr>
+                <td>F003</td>
+                <td>Flight C</td>
+                <td>2024-11-01</td>
+                <td>400</td>
+                <td>A003</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Airline Table</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>AirlineID</th>
+                <th>AirlineName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A001</td>
+                <td>SkyHigh</td>
+            </tr>
+            <tr>
+                <td>A002</td>
+                <td>AirWings</td>
+            </tr>
+            <tr>
+                <td>A003</td>
+                <td>FlyAway</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Customer Table</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>CustomerID</th>
+                <th>CustomerName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>C001</td>
+                <td>Alice Brown</td>
+            </tr>
+            <tr>
+                <td>C002</td>
+                <td>Bob White</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <footer>
+        <p>Prepared by: [Your Name]</p>
+    </footer>
+</body>
+</html>
